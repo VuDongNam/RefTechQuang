@@ -1,0 +1,26 @@
+﻿@model IEnumerable<MyTemplate.Data.Product>
+
+@{
+  ViewData["Title"] = "Products";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="card-columns">
+  @foreach (var product in Model)
+  {
+    <div class="card">
+      <h3 class="card-header">@product.Name</h3>
+      <div class="card-body" style="height: 150px;">
+        @product.Description
+      </div>
+      <div class="card-footer">
+        <span class="text-muted">$ @(product.Price.ToString("n0"))</span>
+        <a asp-route="addcart"
+           asp-route-pid="@product.ProductId"
+           class="btn btn-secondary btn-sm float-right">Add Cart</a>
+      </div>
+    </div>
+  }
+
+</div>

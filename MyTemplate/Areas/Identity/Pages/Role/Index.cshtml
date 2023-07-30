@@ -1,0 +1,43 @@
+﻿@page
+
+@model IndexModel
+@{
+}
+
+<h1>Role List</h1>
+<partial name="_StatusMessage" model="@Model.StatusMessage"/>
+
+<form method="post" class="my-1 d-inline">
+    <button class="btn btn-secondary" asp-page="./Add" asp-page-handler="StartNewRole">Create New Role</button>
+</form>
+<a class="btn btn-secondary" asp-page="./User">Assign Roles to User</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in @Model.Roles)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>
+                        <form method="post" class="d-inline">
+                            <button class="btn btn-success btn-sm" name="Input.Id" value="@item.Id" asp-page="./Add" asp-page-handler="StartUpdate">Update</button>
+                        </form>
+                        <form method="POST" class="d-inline">
+                            <button name="Input.Id" value="@item.Id" class="btn btn-success btn-sm"
+                                    asp-page="./Delete">
+                                Xóa Role
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>

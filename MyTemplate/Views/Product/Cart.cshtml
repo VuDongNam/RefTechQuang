@@ -1,0 +1,78 @@
+﻿@model List<MyTemplate.Models.CartItem>
+@{
+  ViewData["Title"] = "Cart";
+}
+
+<h1>Cart</h1>
+
+@if (Model.Count > 0)
+{
+  decimal total = 0;
+  int stt = 1;
+
+  <table class="table">
+    <tr>
+      <th>#</th>
+      <th>Product</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Sub Total</th>
+      <th></th>
+    </tr>
+    @foreach (var cartitem in Model)
+    {
+      var thanhtien = cartitem.quantity * cartitem.product.Price;
+      total += thanhtien;
+
+      <tr>
+        <td>@(stt++)</td>
+        <td>@cartitem.product.Name</td>
+        <td>@(cartitem.product.Price.ToString("n0"))</td>
+        <td><input asp-for="@cartitem.quantity" id="@($"quantity-{cartitem.product.ProductId}")" /></td>
+        <td>@(thanhtien.ToString("n0"))</td>
+        <td>
+          <button class="btn btn-success updatecartitem" data-pid="@cartitem.product.ProductId">
+            Update
+          </button>
+          <a asp-route="removecart" asp-route-pid="@cartitem.product.ProductId"
+             class="btn btn-danger">Remove</a>
+        </td>
+      </tr>
+    }
+    <tr>
+      <td colspan="4" class="text-right">Total</td>
+      <td>@(total.ToString("n0"))</td>
+      <td></td>
+    </tr>
+  </table>
+
+  <a asp-controller="Product" asp-action="Checkout" class="btn btn-success">Checkout</a>
+
+  @section Scripts {
+    <script>
+          $(document).ready(function () {
+              $(".updatecartitem").click(function (event) {
+                  event.preventDefault();
+                  var pid = $(this).attr("data-pid");
+                  var quantity = $("#quantity-" + pid).val();
+                  $.ajax({
+                      type: "POST",
+                      url:"@Url.RouteUrl("updatecart")",
+                      data: {
+                          pid: pid,
+                          quantity:quantity
+                      },
+                      success: function (result) {
+                          window.location.href = "@Url.RouteUrl("cart")";
+                      }
+                  });
+              });
+          });
+    </script>
+  }
+
+}
+else
+{
+  <p class="alert alert-danger">Cart Empty</p>
+}
